@@ -67,18 +67,16 @@ namespace ChessServer.Domain.Entites.Abstract
         /// Получает все позиции.
         /// </summary>
         /// <returns> Все позиции. </returns>
-        public virtual List<Cell> GetAllPositions()
+        public virtual async Task<List<Cell>> GetAsyncAllPositions()
         {
-            return AllPositions;
+            // Заглушка.
+            return await Task.Run(() => AllPositions);
         }
 
         /// <summary>
         /// Устанавливает все возможные позиции.
         /// </summary>
         /// <returns> Все возможные позиции. </returns>
-        public void SetPossiblePositions(List<Cell> _possiblePositions)
-        {
-            PossiblePositions = _possiblePositions;
-        }
+        public abstract void SetPossiblePositions(List<Cell> _possiblePositions);
     }
 }

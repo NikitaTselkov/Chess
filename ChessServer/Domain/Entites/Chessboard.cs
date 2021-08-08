@@ -27,6 +27,7 @@ namespace ChessServer.Domain.Entites
 
             InitChessboard();
             InitPawns();
+            InitRooks();
         }
 
         /// <summary>
@@ -67,6 +68,20 @@ namespace ChessServer.Domain.Entites
             ChessPieces.Add(new Pawn(Colors.Black, Cells["F7"]));
             ChessPieces.Add(new Pawn(Colors.Black, Cells["G7"]));
             ChessPieces.Add(new Pawn(Colors.Black, Cells["H7"]));
+        }
+
+        /// <summary>
+        /// Создание ладей.
+        /// </summary>
+        private void InitRooks()
+        {
+            // Белые ладьи.
+            ChessPieces.Add(new Rook(Colors.White, Cells["A1"]));
+            ChessPieces.Add(new Rook(Colors.White, Cells["H1"]));
+
+            // Черные ладьи.
+            ChessPieces.Add(new Rook(Colors.White, Cells["A8"]));
+            ChessPieces.Add(new Rook(Colors.White, Cells["H8"]));
         }
     }
 }
