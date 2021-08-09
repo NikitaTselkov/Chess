@@ -58,6 +58,7 @@ namespace ChessServer.Domain.Entites.Abstract
             if (!PossiblePositions.Contains(_newPosition))
                 throw new ArgumentNullException(nameof(_newPosition), "Такой ход не возможен.");
 
+            CurrentPosition = _newPosition;
             IsMove?.Invoke();
 
             return _newPosition;
