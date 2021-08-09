@@ -30,6 +30,7 @@ namespace ChessServer.Domain.Entites
             InitRooks();
             InitBishops();
             InitKnights();
+            InitKings();
         }
 
         /// <summary>
@@ -112,6 +113,18 @@ namespace ChessServer.Domain.Entites
             // Черные кони.
             ChessPieces.Add(new Knight(Colors.White, Cells["B8"]));
             ChessPieces.Add(new Knight(Colors.White, Cells["G8"]));
+        }
+
+        /// <summary>
+        /// Создание королей.
+        /// </summary>
+        private void InitKings()
+        {
+            // Белый король.
+            ChessPieces.Add(new King(Colors.White, Cells["E1"]));
+
+            // Черный король.
+            ChessPieces.Add(new King(Colors.White, Cells["E8"]));
         }
     }
 }
