@@ -77,6 +77,9 @@ namespace ChessServer.Domain.Entites.Abstract
         /// Устанавливает все возможные позиции.
         /// </summary>
         /// <returns> Все возможные позиции. </returns>
-        public abstract void SetPossiblePositions(List<Cell> _possiblePositions);
+        public virtual void SetPossiblePositions(List<Cell> _possiblePositions)
+        {
+            PossiblePositions = _possiblePositions;
+        }
     }
 }

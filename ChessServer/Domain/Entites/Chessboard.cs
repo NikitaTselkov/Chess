@@ -28,6 +28,7 @@ namespace ChessServer.Domain.Entites
             InitChessboard();
             InitPawns();
             InitRooks();
+            InitBishops();
         }
 
         /// <summary>
@@ -82,6 +83,20 @@ namespace ChessServer.Domain.Entites
             // Черные ладьи.
             ChessPieces.Add(new Rook(Colors.White, Cells["A8"]));
             ChessPieces.Add(new Rook(Colors.White, Cells["H8"]));
+        }
+
+        /// <summary>
+        /// Создание слонов.
+        /// </summary>
+        private void InitBishops()
+        {
+            // Белые слоны.
+            ChessPieces.Add(new Bishop(Colors.White, Cells["E4"]));
+            ChessPieces.Add(new Bishop(Colors.White, Cells["F1"]));
+
+            // Черные слоны.
+            ChessPieces.Add(new Bishop(Colors.White, Cells["C8"]));
+            ChessPieces.Add(new Bishop(Colors.White, Cells["F8"]));
         }
     }
 }

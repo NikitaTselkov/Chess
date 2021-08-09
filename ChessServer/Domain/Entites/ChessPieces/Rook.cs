@@ -48,14 +48,5 @@ namespace ChessServer.Domain.Entites.ChessPieces
 
             return allPositions;
         }
-
-        /// <summary>
-        /// Устанавливает все возможные позиции.
-        /// </summary>
-        /// <returns> Все возможные позиции. </returns>
-        public override void SetPossiblePositions(List<Cell> _possiblePositions)
-        {
-            throw new NotImplementedException();
-        }
     }
 }
