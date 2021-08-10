@@ -1,4 +1,5 @@
 ﻿using ChessServer.Domain.Entites.Abstract;
+using ChessServer.Domain.Entites.ChessboardModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -15,22 +16,20 @@ namespace ChessServer.Domain.Entites.ChessPieces
     {
         private const string _name = "Пешка";
 
-        public Pawn(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition)
-        {
-            base.AllPositions.AddRange(GetAsyncAllPositions().Result);
-        }
+        public Pawn(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition) { }
 
 
         /// <summary>
         /// Получает все позиции.
         /// </summary>
-        /// <returns> Все позиции. </returns>
-        public override async Task<List<Cell>> GetAsyncAllPositions()
+        /// <param name="positions"> Занятые позиции и цвета фигур. </param>
+        public override async Task GetAsyncPositions(List<(Cell, Colors)> positions)
         {
-            List<Cell> allPositions = new List<Cell>();
-
             await Task.Run(() =>
             {
+                base.AllPositions = new List<Cell>();
+                base.PossiblePositions = new List<Cell>();
+
                 int column = CurrentPosition.Column;
                 int row = CurrentPosition.Row;
 
@@ -42,26 +41,26 @@ namespace ChessServer.Domain.Entites.ChessPieces
                         // Если пешка находится на левом краю доски.
                         if (column == 1)
                         {
-                            allPositions.Add(new Cell(column + 1, row + 1));
+                            SetValue(positions, new Cell(column + 1, row + 1));
                         }
                         // Если пешка находится на правом краю доски.
                         else if (column == 8)
                         {
-                            allPositions.Add(new Cell(column - 1, row + 1));
+                            SetValue(positions, new Cell(column - 1, row + 1));
                         }
                         // Если пешка не возле края доски.
                         else
                         {
-                            allPositions.Add(new Cell(column + 1, row + 1));
-                            allPositions.Add(new Cell(column - 1, row + 1));
+                            SetValue(positions, new Cell(column + 1, row + 1));
+                            SetValue(positions, new Cell(column - 1, row + 1));
                         }
                         // Если пешка на стартовой позиции.
                         if (row == 2)
                         {
-                            allPositions.Add(new Cell(column, row + 2));
+                            SetValue(positions, new Cell(column, row + 2), true);
                         }
 
-                        allPositions.Add(new Cell(column, row + 1));
+                        SetValue(positions, new Cell(column, row + 1), true);
                     }
                 }
                 else if (Color == Colors.Black)
@@ -69,35 +68,49 @@ namespace ChessServer.Domain.Entites.ChessPieces
                     // Если пешка дошла не до конца поля.
                     if (row != 1)
                     {
-
                         // Если пешка находится на левом краю доски.
                         if (column == 8)
                         {
-                            allPositions.Add(new Cell(column - 1, row - 1));
+                            SetValue(positions, new Cell(column - 1, row - 1));
                         }
                         // Если пешка находится на правом краю доски.
                         else if (column == 1)
                         {
-                            allPositions.Add(new Cell(column + 1, row - 1));
+                            SetValue(positions, new Cell(column + 1, row - 1));
                         }
                         // Если пешка не возле края доски.
                         else
                         {
-                            allPositions.Add(new Cell(column - 1, row - 1));
-                            allPositions.Add(new Cell(column + 1, row - 1));
+                            SetValue(positions, new Cell(column - 1, row - 1));
+                            SetValue(positions, new Cell(column + 1, row - 1));
                         }
                         // Если пешка на стартовой позиции.
                         if (row == 7)
                         {
-                            allPositions.Add(new Cell(column, row - 2));
+                            SetValue(positions, new Cell(column, row - 2), true);
                         }
 
-                        allPositions.Add(new Cell(column, row - 1));
+                        SetValue(positions, new Cell(column, row - 1), true);
                     }
                 }
             });
+        }
 
-            return allPositions;
+        private void SetValue(List<(Cell, Colors)> positions, Cell cell, bool isContains = false)
+        {
+            Cell temp = cell;
+            base.AllPositions.Add(temp);
+
+            if (isContains)
+            {
+                if (!positions.Any(a => a.Item1 == temp))
+                    base.PossiblePositions.Add(temp);
+            }
+            else
+            {
+                if (positions.Any(a => a.Item1 == temp && a.Item2 != base.Color))
+                    base.PossiblePositions.Add(temp);                
+            }      
         }
     }
 }

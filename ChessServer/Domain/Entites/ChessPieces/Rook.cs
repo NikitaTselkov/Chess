@@ -1,4 +1,5 @@
 ﻿using ChessServer.Domain.Entites.Abstract;
+using ChessServer.Domain.Entites.ChessboardModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

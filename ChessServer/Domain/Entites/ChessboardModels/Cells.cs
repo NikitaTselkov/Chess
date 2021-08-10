@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChessServer.Domain.Entites
+namespace ChessServer.Domain.Entites.ChessboardModels
 {
     [DebuggerDisplay("{Value}")]
     public sealed class Cells

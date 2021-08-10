@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChessServer.Domain.Entites
+namespace ChessServer.Domain.Entites.ChessboardModels
 {
     public sealed class Chessboard
     {
@@ -31,6 +31,7 @@ namespace ChessServer.Domain.Entites
             InitBishops();
             InitKnights();
             InitKings();
+            InitQueens();
         }
 
         /// <summary>
@@ -125,6 +126,18 @@ namespace ChessServer.Domain.Entites
 
             // Черный король.
             ChessPieces.Add(new King(Colors.White, Cells["E8"]));
+        }
+        
+        /// <summary>
+        /// Создание ферзей.
+        /// </summary>
+        private void InitQueens()
+        {
+            // Белый ферзь.
+            ChessPieces.Add(new Queen(Colors.White, Cells["D1"]));
+
+            // Черный ферзь.
+            ChessPieces.Add(new Queen(Colors.White, Cells["D8"]));
         }
     }
 }

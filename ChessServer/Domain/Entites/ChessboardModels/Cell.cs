@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ChessServer.Domain.Entites
+namespace ChessServer.Domain.Entites.ChessboardModels
 {
     [DebuggerDisplay("{Title}")]
     public struct Cell
@@ -23,7 +23,6 @@ namespace ChessServer.Domain.Entites
         /// Ряд.
         /// </summary>
         public int Row { get; private set; }
-
 
         public Cell(int _column, int _row)
         {
@@ -46,6 +45,16 @@ namespace ChessServer.Domain.Entites
             Title += (_row).ToString();
             Column = _column;
             Row = _row;
+        }
+
+        public static bool operator ==(Cell a, Cell b)
+        {
+            return a.Title == b.Title;
+        }
+
+        public static bool operator !=(Cell a, Cell b)
+        {
+            return a.Title != b.Title;
         }
     }
 }

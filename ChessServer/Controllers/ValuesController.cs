@@ -16,9 +16,9 @@ namespace ChessServer.Controllers
         [HttpGet]
         public IEnumerable<AbstractChessPiece> Get()
         {
-            Chessboard chessboard = new Chessboard();
+            Game game = new Game();
 
-            return chessboard.ChessPieces;
+            return game.Chessboard.ChessPieces;
         }
 
         // GET api/Values/5

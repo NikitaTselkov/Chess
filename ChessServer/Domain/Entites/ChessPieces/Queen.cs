@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 namespace ChessServer.Domain.Entites.ChessPieces
 {
     /// <summary>
-    /// Слон.
+    /// Ферзь.
     /// </summary>
     [DebuggerDisplay("{_name}, {base.Color}")]
-    public sealed class Bishop : AbstractChessPiece
+    public sealed class Queen : AbstractChessPiece
     {
-        private const string _name = "Слон";
+        private const string _name = "Ферзь";
 
-        public Bishop(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition)
+        public Queen(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition)
         {
             base.AllPositions.AddRange(GetAsyncAllPositions().Result);
         }
@@ -34,27 +34,37 @@ namespace ChessServer.Domain.Entites.ChessPieces
                 int column = CurrentPosition.Column;
                 int row = CurrentPosition.Row;
 
-                for (int i = 1; i < 8; i++)
+                for (int i = 1; i <= 8; i++)
                 {
-                    // Если слон может ходить по верхней правой диагонали.
+                    // Если ферзь может ходить по верхней правой диагонали.
                     if (column + i <= 8 && row + i <= 8)
                     {
                         allPositions.Add(new Cell(column + i, row + i));
                     }
-                    // Если слон может ходить по нижней левой диагонали.
+                    // Если ферзь может ходить по нижней левой диагонали.
                     if (column - i >= 1 && row - i >= 1)
                     {
                         allPositions.Add(new Cell(column - i, row - i));
                     }
-                    // Если слон может ходить по верхней левой диагонали.
+                    // Если ферзь может ходить по верхней левой диагонали.
                     if (column - i >= 1 && row + i <= 8)
                     {
                         allPositions.Add(new Cell(column - i, row + i));
                     }
-                    // Если слон может ходить по нижней правой диагонали.
+                    // Если ферзь может ходить по нижней правой диагонали.
                     if (column + i <= 8 && row - i >= 1)
                     {
                         allPositions.Add(new Cell(column + i, row - i));
+                    }
+                    // Если ферзь может ходить по вертикали.
+                    if (row != i)
+                    {
+                        allPositions.Add(new Cell(column, i));
+                    }
+                    // Если ферзь может ходить по горизонтали.
+                    if (column != i)
+                    {
+                        allPositions.Add(new Cell(i, row));
                     }
                 }
             });

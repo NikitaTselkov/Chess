@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ChessServer.Domain.Entites.ChessboardModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,12 +26,12 @@ namespace ChessServer.Domain.Entites.Abstract
         /// <summary>
         /// Возможные позиции.
         /// </summary>
-        public List<Cell> PossiblePositions { get; private set; }
+        public List<Cell> PossiblePositions { get; set; }
 
         /// <summary>
         /// Все позиции.
         /// </summary>
-        public List<Cell> AllPositions { get; private set; }
+        public List<Cell> AllPositions { get; set; }
 
         /// <summary>
         /// Событие перемещения.
@@ -67,6 +68,18 @@ namespace ChessServer.Domain.Entites.Abstract
         /// <summary>
         /// Получает все позиции.
         /// </summary>
+        /// <param name="positions"> Занятые позиции и цвета фигур. </param>
+        public virtual async Task GetAsyncPositions(List<(Cell, Colors)> positions)
+        {
+            // Заглушка.
+            await Task.Run(() => AllPositions);
+        }
+
+
+        // TODO: Удалить.
+        /// <summary>
+        /// Получает все позиции.
+        /// </summary>
         /// <returns> Все позиции. </returns>
         public virtual async Task<List<Cell>> GetAsyncAllPositions()
         {
@@ -74,13 +87,25 @@ namespace ChessServer.Domain.Entites.Abstract
             return await Task.Run(() => AllPositions);
         }
 
+        // TODO: Удалить.
         /// <summary>
-        /// Устанавливает все возможные позиции.
+        /// Получает все возможные позиции.
         /// </summary>
         /// <returns> Все возможные позиции. </returns>
-        public virtual void SetPossiblePositions(List<Cell> _possiblePositions)
+        public virtual async Task<List<Cell>> GetAsyncPossiblePositions(Chessboard chessboard)
         {
-            PossiblePositions = _possiblePositions;
+            // Заглушка.
+            return await Task.Run(() => PossiblePositions);
         }
+
+        // TODO: Удалить.
+        ///// <summary>
+        ///// Устанавливает все возможные позиции.
+        ///// </summary>
+        ///// <returns> Все возможные позиции. </returns>
+        //public virtual void SetPossiblePositions(List<Cell> _possiblePositions)
+        //{
+        //    PossiblePositions = _possiblePositions;
+        //}
     }
 }
