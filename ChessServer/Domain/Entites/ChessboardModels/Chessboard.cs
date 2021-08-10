@@ -84,8 +84,8 @@ namespace ChessServer.Domain.Entites.ChessboardModels
             ChessPieces.Add(new Rook(Colors.White, Cells["H1"]));
 
             // Черные ладьи.
-            ChessPieces.Add(new Rook(Colors.White, Cells["A8"]));
-            ChessPieces.Add(new Rook(Colors.White, Cells["H8"]));
+            ChessPieces.Add(new Rook(Colors.Black, Cells["A8"]));
+            ChessPieces.Add(new Rook(Colors.Black, Cells["H8"]));
         }
 
         /// <summary>
@@ -98,8 +98,8 @@ namespace ChessServer.Domain.Entites.ChessboardModels
             ChessPieces.Add(new Bishop(Colors.White, Cells["F1"]));
 
             // Черные слоны.
-            ChessPieces.Add(new Bishop(Colors.White, Cells["C8"]));
-            ChessPieces.Add(new Bishop(Colors.White, Cells["F8"]));
+            ChessPieces.Add(new Bishop(Colors.Black, Cells["C8"]));
+            ChessPieces.Add(new Bishop(Colors.Black, Cells["F8"]));
         }
         
         /// <summary>
@@ -112,8 +112,8 @@ namespace ChessServer.Domain.Entites.ChessboardModels
             ChessPieces.Add(new Knight(Colors.White, Cells["G1"]));
 
             // Черные кони.
-            ChessPieces.Add(new Knight(Colors.White, Cells["B8"]));
-            ChessPieces.Add(new Knight(Colors.White, Cells["G8"]));
+            ChessPieces.Add(new Knight(Colors.Black, Cells["B8"]));
+            ChessPieces.Add(new Knight(Colors.Black, Cells["G8"]));
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace ChessServer.Domain.Entites.ChessboardModels
             ChessPieces.Add(new King(Colors.White, Cells["E1"]));
 
             // Черный король.
-            ChessPieces.Add(new King(Colors.White, Cells["E8"]));
+            ChessPieces.Add(new King(Colors.Black, Cells["E8"]));
         }
         
         /// <summary>
@@ -137,7 +137,7 @@ namespace ChessServer.Domain.Entites.ChessboardModels
             ChessPieces.Add(new Queen(Colors.White, Cells["D1"]));
 
             // Черный ферзь.
-            ChessPieces.Add(new Queen(Colors.White, Cells["D8"]));
+            ChessPieces.Add(new Queen(Colors.Black, Cells["D8"]));
         }
     }
 }

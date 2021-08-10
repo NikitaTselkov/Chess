@@ -75,6 +75,36 @@ namespace ChessServer.Domain.Entites.Abstract
             await Task.Run(() => AllPositions);
         }
 
+        /// <summary>
+        /// Устанавливает значения спискам позиций.
+        /// </summary>
+        /// <param name="positions"> Позиция фигуры и её цвет. </param>
+        /// <param name="cell"> Устанавливаемое значение. </param>
+        /// <param name="isContains"> Если поле впереди по диагонали занято. </param>
+        public virtual void SetValueToPositions(List<(Cell, Colors)> positions, Cell cell, ref bool isContains)
+        {
+            Cell temp = cell;
+            AllPositions.Add(temp);
+
+            // Если на пути есть фигура.
+            if (isContains == false)
+            {
+                if (positions.Any(a => a.Item1 == temp))
+                {
+                    var tmp = positions.First(f => f.Item1 == temp);
+
+                    if (tmp.Item2 != Color)
+                    {
+                        PossiblePositions.Add(temp);
+                    }
+                    isContains = true;
+                }
+                else
+                {
+                    PossiblePositions.Add(temp);
+                }
+            }
+        }
 
         // TODO: Удалить.
         /// <summary>
@@ -86,26 +116,5 @@ namespace ChessServer.Domain.Entites.Abstract
             // Заглушка.
             return await Task.Run(() => AllPositions);
         }
-
-        // TODO: Удалить.
-        /// <summary>
-        /// Получает все возможные позиции.
-        /// </summary>
-        /// <returns> Все возможные позиции. </returns>
-        public virtual async Task<List<Cell>> GetAsyncPossiblePositions(Chessboard chessboard)
-        {
-            // Заглушка.
-            return await Task.Run(() => PossiblePositions);
-        }
-
-        // TODO: Удалить.
-        ///// <summary>
-        ///// Устанавливает все возможные позиции.
-        ///// </summary>
-        ///// <returns> Все возможные позиции. </returns>
-        //public virtual void SetPossiblePositions(List<Cell> _possiblePositions)
-        //{
-        //    PossiblePositions = _possiblePositions;
-        //}
     }
 }
