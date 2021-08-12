@@ -16,38 +16,52 @@ namespace ChessServer.Domain.Entites.ChessPieces
     {
         private const string _name = "Ладья";
 
-        public Rook(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition)
-        {
-            base.AllPositions.AddRange(GetAsyncAllPositions().Result);
-        }
+        public Rook(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition) { }
+
 
         /// <summary>
         /// Получает все позиции.
         /// </summary>
-        /// <returns> Все позиции. </returns>
-        public override async Task<List<Cell>> GetAsyncAllPositions()
+        /// <param name="positions"> Занятые позиции и цвета фигур. </param>
+        public override async Task GetAsyncPositions(List<(Cell, Colors)> positions)
         {
-            List<Cell> allPositions = new List<Cell>();
-
             await Task.Run(() =>
             {
+                base.AllPositions = new List<Cell>();
+                base.PossiblePositions = new List<Cell>();
+
                 int column = CurrentPosition.Column;
                 int row = CurrentPosition.Row;
 
-                for (int i = 1; i <= 8; i++)
+                bool n = false;
+                bool e = false;
+                bool s = false;
+                bool w = false;
+
+                for (int i = 1; i < 8; i++)
                 {
-                    if (row != i)
+                    // Если ладья может ходить вверх.
+                    if (row + i <= 8)
                     {
-                        allPositions.Add(new Cell(column, i));
+                        SetValueToPositions(positions, new Cell(column, row + i), ref n);
                     }
-                    if (column != i)
+                    // Если ладья может ходить вниз.
+                    if (row - i >= 1)
                     {
-                        allPositions.Add(new Cell(i, row));
+                        SetValueToPositions(positions, new Cell(column, row - i), ref s);
+                    }
+                    // Если ладья может ходить влево.
+                    if (column - i >= 1)
+                    {
+                        SetValueToPositions(positions, new Cell(column - i, row), ref w);
+                    }
+                    // Если ладья может ходить вправо.
+                    if (column + i <= 8)
+                    {
+                        SetValueToPositions(positions, new Cell(column + i, row), ref e);
                     }
                 }
             });
-
-            return allPositions;
         }
     }
 }

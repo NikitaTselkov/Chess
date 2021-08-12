@@ -15,11 +15,6 @@ namespace ChessServer.Domain.Entites
         {
             Chessboard = new Chessboard();
 
-            _positionsList = new List<(Cell, Colors)>();
-
-            Chessboard.ChessPieces.ForEach(f => _positionsList.Add((f.CurrentPosition, f.Color)));
-
-
             UpdatePositions();
             SubscribingToEvents();
 
@@ -47,6 +42,10 @@ namespace ChessServer.Domain.Entites
         /// </summary>
         private void UpdatePositions()
         {
+            _positionsList = new List<(Cell, Colors)>();
+
+            Chessboard.ChessPieces.ForEach(f => _positionsList.Add((f.CurrentPosition, f.Color)));
+
             Chessboard.ChessPieces.ForEach(f => f.GetAsyncPositions(_positionsList));
         }
     }
