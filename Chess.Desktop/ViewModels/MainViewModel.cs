@@ -1,4 +1,5 @@
 ﻿using Chess.Desktop.Models;
+using Chess.Desktop.ViewModels.Navigation;
 using GalaSoft.MvvmLight;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Chess.Desktop.ViewModels
 {
-    public class MainViewModel : ViewModelBase
+    public class MainViewModel : NavigateViewModel
     {
         // Информация с сервера.
         private string _data;
