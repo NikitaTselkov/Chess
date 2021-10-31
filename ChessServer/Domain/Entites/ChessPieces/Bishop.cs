@@ -14,7 +14,7 @@ namespace ChessServer.Domain.Entites.ChessPieces
     [DebuggerDisplay("{_name}, {base.Color}")]
     public sealed class Bishop : AbstractChessPiece
     {
-        private const string _name = "Слон";
+        private const PieceNames _name = PieceNames.Bishop;
 
         public Bishop(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition) { }
 

@@ -14,7 +14,7 @@ namespace ChessServer.Domain.Entites.ChessPieces
     [DebuggerDisplay("{_name}, {base.Color}")]
     public sealed class Queen : AbstractChessPiece
     {
-        private const string _name = "Ферзь";
+        private const PieceNames _name = PieceNames.Queen;
 
         public Queen(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition) { }
 

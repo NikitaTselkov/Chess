@@ -11,7 +11,7 @@ namespace ChessServer.Domain.Entites.Abstract
         /// <summary>
         /// Фигура.
         /// </summary>
-        public string Name { get; private set; }
+        public PieceNames Name { get; private set; }
 
         /// <summary>
         /// Цвет фигуры.
@@ -41,7 +41,7 @@ namespace ChessServer.Domain.Entites.Abstract
 
         public AbstractChessPiece() { }
 
-        public AbstractChessPiece(string _name, Colors _color, Cell _currentPosition)
+        public AbstractChessPiece(PieceNames _name, Colors _color, Cell _currentPosition)
         {
             Name = _name;
             Color = _color;
@@ -72,7 +72,7 @@ namespace ChessServer.Domain.Entites.Abstract
         public virtual async Task GetAsyncPositions(List<(Cell, Colors)> positions)
         {
             // Заглушка.
-            await Task.Run(() => AllPositions);
+            await Task.Run(() => null);
         }
 
         /// <summary>
@@ -104,17 +104,6 @@ namespace ChessServer.Domain.Entites.Abstract
                     PossiblePositions.Add(temp);
                 }
             }
-        }
-
-        // TODO: Удалить.
-        /// <summary>
-        /// Получает все позиции.
-        /// </summary>
-        /// <returns> Все позиции. </returns>
-        public virtual async Task<List<Cell>> GetAsyncAllPositions()
-        {
-            // Заглушка.
-            return await Task.Run(() => AllPositions);
         }
     }
 }

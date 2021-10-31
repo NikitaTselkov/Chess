@@ -14,7 +14,7 @@ namespace ChessServer.Domain.Entites.ChessPieces
     [DebuggerDisplay("{_name}, {base.Color}")]
     public sealed class Pawn : AbstractChessPiece
     {
-        private const string _name = "Пешка";
+        private const PieceNames _name = PieceNames.Pawn;
 
         public Pawn(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition) { }
 

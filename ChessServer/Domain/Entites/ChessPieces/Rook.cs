@@ -14,7 +14,7 @@ namespace ChessServer.Domain.Entites.ChessPieces
     [DebuggerDisplay("{_name}, {base.Color}")]
     public sealed class Rook : AbstractChessPiece
     {
-        private const string _name = "Ладья";
+        private const PieceNames _name = PieceNames.Rook;
 
         public Rook(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition) { }
 
