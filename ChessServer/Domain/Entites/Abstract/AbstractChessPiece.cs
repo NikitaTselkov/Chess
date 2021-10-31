@@ -53,16 +53,22 @@ namespace ChessServer.Domain.Entites.Abstract
         /// <summary>
         /// Перемещение.
         /// </summary>
-        public virtual Cell Move(Cell _newPosition)
+        public virtual void Move(Cell newPosition)
         {
             // Если такой ход не возможен.
-            if (!PossiblePositions.Contains(_newPosition))
-                throw new ArgumentNullException(nameof(_newPosition), "Такой ход не возможен.");
+            if (!PossiblePositions.Contains(newPosition))
+                throw new ArgumentNullException(nameof(newPosition), "Такой ход не возможен.");
 
-            CurrentPosition = _newPosition;
+            CurrentPosition = newPosition;
             IsMove?.Invoke();
+        }
 
-            return _newPosition;
+        /// <summary>
+        /// Откатывает перемещение.
+        /// </summary>
+        public virtual void MoveBackwards(Cell oldPosition)
+        {
+            CurrentPosition = oldPosition;
         }
 
         /// <summary>

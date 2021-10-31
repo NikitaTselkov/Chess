@@ -15,7 +15,7 @@ namespace ChessServer.Domain.Entites.ChessPieces
     public sealed class King : AbstractChessPiece
     {
         private const PieceNames _name = PieceNames.King;
-
+        public bool IsMoved { get; set; }
         public King(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition) { }
 
 

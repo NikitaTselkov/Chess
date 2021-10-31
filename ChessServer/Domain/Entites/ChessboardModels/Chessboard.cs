@@ -140,11 +140,11 @@ namespace ChessServer.Domain.Entites.ChessboardModels
             ChessPieces.Add(new Queen(Colors.Black, Cells["D8"]));
         }
 
-        public Cell this[PieceNames name, Colors color]
+        public IEnumerable<AbstractChessPiece> this[PieceNames name, Colors color]
         {
             get
             {
-                return ChessPieces.First(f => f.Name == name && f.Color == color).CurrentPosition;
+                return new List<AbstractChessPiece>(ChessPieces.Where(f => f.Name == name && f.Color == color));
             }
         }
     }

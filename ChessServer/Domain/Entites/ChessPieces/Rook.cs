@@ -15,7 +15,7 @@ namespace ChessServer.Domain.Entites.ChessPieces
     public sealed class Rook : AbstractChessPiece
     {
         private const PieceNames _name = PieceNames.Rook;
-
+        public bool IsMoved { get; set; }
         public Rook(Colors _color, Cell _currentPosition) : base(_name, _color, _currentPosition) { }
 
 
