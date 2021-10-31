@@ -29,7 +29,12 @@ namespace ChessServer.Domain.Entites
             UpdatePositions();
             SubscribingToEvents();
 
-            MoveWithCheckGameRules(Chessboard.ChessPieces[6], new Cell(7, 8));
+           // MoveWithCheckGameRules(Chessboard.ChessPieces[6], new Cell(7, 8));
+        }
+
+        ~Game()
+        {
+            UnsubscribingFromEvents();
         }
 
         /// <summary>
@@ -103,6 +108,11 @@ namespace ChessServer.Domain.Entites
 
         private void ReplacePawnWithPiece(Pawn pawn, AbstractChessPiece piece)
         {
+            var positionsList = new List<(Cell, Colors)> { (pawn.CurrentPosition, pawn.Color) };
+
+            piece.IsMove += UpdatePositions;
+            piece.GetAsyncPositions(positionsList).Wait();
+
             Chessboard.ChessPieces.Remove(pawn);
             Chessboard.ChessPieces.Add(piece);
         }
