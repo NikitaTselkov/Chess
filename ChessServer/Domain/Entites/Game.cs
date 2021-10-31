@@ -29,7 +29,7 @@ namespace ChessServer.Domain.Entites
             UpdatePositions();
             SubscribingToEvents();
 
-            MoveWithCheckGameRules(Chessboard.ChessPieces[5], new Cell(6, 4));
+            MoveWithCheckGameRules(Chessboard.ChessPieces[6], new Cell(7, 8));
         }
 
         /// <summary>
@@ -53,6 +53,21 @@ namespace ChessServer.Domain.Entites
             else if (chessPiece is Rook rook)
             {
                 rook.IsMoved = true;
+            }
+            else if (chessPiece is Pawn pawn)
+            {
+                if (pawn.CurrentPosition.Row == 8 && pawn.Color == Colors.White)
+                {
+                    //TODO: Добавить выбор фигуры.
+                    var piece = new Queen(pawn.Color, pawn.CurrentPosition);
+                    ReplacePawnWithPiece(pawn, piece);
+                }
+                else if (pawn.CurrentPosition.Row == 1 && pawn.Color == Colors.Black)
+                {
+                    //TODO: Добавить выбор фигуры.
+                    var piece = new Queen(pawn.Color, pawn.CurrentPosition);
+                    ReplacePawnWithPiece(pawn, piece);
+                }
             }
         }
 
@@ -84,6 +99,12 @@ namespace ChessServer.Domain.Entites
 
             IsKingCanCastle(Colors.White);
             IsKingCanCastle(Colors.Black);
+        }
+
+        private void ReplacePawnWithPiece(Pawn pawn, AbstractChessPiece piece)
+        {
+            Chessboard.ChessPieces.Remove(pawn);
+            Chessboard.ChessPieces.Add(piece);
         }
 
         /// <summary>
