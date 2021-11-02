@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -10,7 +11,6 @@ namespace ChessServer.Domain.Entites.ChessboardModels
     public sealed class Cells
     {
         public Cell[,] Value { get; set; }
-
 
         public Cells(int _column, int _row)
         {
@@ -35,8 +35,8 @@ namespace ChessServer.Domain.Entites.ChessboardModels
 
         public Cell this[int i, int j]
         {
-            get { return Value[i, j]; }
-            set { Value[i, j] = value; }
+            get => Value[i, j];
+            set => Value[i, j] = value;
         }
     }
 }

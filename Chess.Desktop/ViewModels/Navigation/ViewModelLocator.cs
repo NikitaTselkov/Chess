@@ -1,4 +1,6 @@
-﻿using Chess.Desktop.ViewModels.WindowService;
+﻿using Chess.Desktop.ViewModels.Pages;
+using Chess.Desktop.ViewModels.Windows;
+using Chess.Desktop.ViewModels.WindowService;
 using CommonServiceLocator;
 using GalaSoft.MvvmLight.Ioc;
 using System;
@@ -17,12 +19,21 @@ namespace Chess.Desktop.ViewModels.Navigation
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
  
             SimpleIoc.Default.Register<MainViewModel>();
+            SimpleIoc.Default.Register<GameViewModel>();
         }
         public MainViewModel MainVM
         {
             get
             {
                 return ServiceLocator.Current.GetInstance<MainViewModel>();
+            }
+        }
+
+        public GameViewModel GameVM
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<GameViewModel>();
             }
         }
     }

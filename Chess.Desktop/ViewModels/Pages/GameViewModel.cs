@@ -1,6 +1,5 @@
 ﻿using Chess.Desktop.Models;
 using Chess.Desktop.ViewModels.Navigation;
-using GalaSoft.MvvmLight;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,39 +7,41 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Chess.Desktop.ViewModels
+namespace Chess.Desktop.ViewModels.Pages
 {
-    public class MainViewModel : NavigateViewModel
+    public class GameViewModel : NavigateViewModel
     {
-        // Информация с сервера.
         private string _data;
         public string Data
         {
-            get { return _data; }
+            get => _data;
             set
             {
                 _data = value;
-                RaisePropertyChanged();
+                RaisePropertyChanged(nameof(Data));
             }
         }
 
-        public RelayCommand GetDataFromServer { get; set; }
-        public MainViewModel()
+       // public RelayCommand GetDataFromServer { get; set; }
+        public GameViewModel()
         {
-            GetDataFromServer = new RelayCommand(GetDataFromServerMethod);
+            GetDataFromServer("Chessboard");
+            //GetDataFromServer();
         }
 
-        public async void GetDataFromServerMethod(object param)
+        public async void GetDataFromServer(string request = "")
         {
             using (HttpClient client = new HttpClient())
             {
-                var respones = await client.GetAsync("https://localhost:44352/api/Values");
-                respones.EnsureSuccessStatusCode();
-                if (respones.IsSuccessStatusCode)
+                var respones = await client.GetAsync($"https://localhost:44352/api/Values/{request}");
+
+                try
                 {
+                    respones.EnsureSuccessStatusCode();
+
                     Data = await respones.Content.ReadAsStringAsync();
                 }
-                else
+                catch (Exception)
                 {
                     Data = $"Server error code: {respones.StatusCode}";
                 }

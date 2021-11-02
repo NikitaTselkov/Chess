@@ -1,10 +1,10 @@
 ﻿using ChessServer.Domain.Entites;
 using ChessServer.Domain.Entites.Abstract;
+using ChessServer.Domain.Entites.ChessPieces;
+using ChessServer.Domain.Entites.ChessboardModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ChessServer.Controllers
 {
@@ -12,13 +12,30 @@ namespace ChessServer.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private Game _game = new Game();
+
         // GET: api/Values
         [HttpGet]
         public IEnumerable<AbstractChessPiece> Get()
         {
-            Game game = new Game();
+            return _game.Chessboard.ChessPieces;
+        }
 
-            return game.Chessboard.ChessPieces;
+        [HttpGet("Chessboard")]
+        public IActionResult GetChessboard()
+        {
+            var array = new Cell[8][];
+
+            for (int i = 0; i < 8; i++)
+            {
+                array[i] = new Cell[8];
+                for (int j = 0; j < 8; j++)
+                {
+                    array[i][j] = _game.Chessboard.Cells[i, j];
+                }
+            }
+
+            return Ok(array);
         }
 
         // GET api/Values/5

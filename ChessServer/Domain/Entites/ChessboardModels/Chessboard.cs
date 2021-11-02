@@ -1,5 +1,6 @@
 ﻿using ChessServer.Domain.Entites.Abstract;
 using ChessServer.Domain.Entites.ChessPieces;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,6 @@ namespace ChessServer.Domain.Entites.ChessboardModels
         /// Фигуры.
         /// </summary>
         public List<AbstractChessPiece> ChessPieces { get; private set; }
-
 
         public Chessboard()
         {

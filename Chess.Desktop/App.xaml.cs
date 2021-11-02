@@ -1,4 +1,5 @@
 ﻿using Chess.Desktop.ViewModels;
+using Chess.Desktop.ViewModels.Windows;
 using Chess.Desktop.ViewModels.WindowService;
 using Chess.Desktop.Views.Windows;
 using System;

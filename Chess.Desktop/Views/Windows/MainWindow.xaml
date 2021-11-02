@@ -11,12 +11,7 @@
         DataContext="{Binding MainVM, Source={StaticResource Locator}}">
 
     <Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-
-            <TextBlock Text="{Binding Data}" Margin="10" />
-            <Button Width="150" Height="50" Content="Get data from server" Command="{Binding GetDataFromServer}" />
-
-        </StackPanel>
+        <Frame Content="{Binding MainFrame, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" NavigationUIVisibility="Hidden" />
     </Grid>
     
 </Window>
