@@ -16,11 +16,19 @@ namespace ChessServer.Controllers
 
         // GET: api/Values
         [HttpGet]
-        public IEnumerable<AbstractChessPiece> Get()
+        public IEnumerable<string> Get()
+        {
+            return new List<string>();
+        }
+
+        // GET: api/Values/Positions
+        [HttpGet("Positions")]
+        public IEnumerable<AbstractChessPiece> GetPositions()
         {
             return _game.Chessboard.ChessPieces;
         }
 
+        // GET: api/Values/Chessboard
         [HttpGet("Chessboard")]
         public IActionResult GetChessboard()
         {

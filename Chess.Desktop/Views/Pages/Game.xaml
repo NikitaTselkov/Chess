@@ -3,21 +3,94 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:Chess.Desktop.Views.Pages"
+      xmlns:local="clr-namespace:Chess.Desktop.Views.Pages" 
+      xmlns:converters="clr-namespace:Chess.Desktop.ViewModels.Converters"
+      xmlns:controls="clr-namespace:Chess.Desktop.Views.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="450"
       d:DesignWidth="800"
       Title="Game"
       DataContext="{Binding GameVM, Source={StaticResource Locator}}">
 
-    <Grid Background="White">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="610*"/>
-            <ColumnDefinition Width="190*"/>
-        </Grid.ColumnDefinitions>
+    <Page.Resources>
+        <converters:CellColorConverter x:Key="CellColorConverter"/>
+    </Page.Resources>
 
-        
-        
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <ItemsControl Grid.Row="2" ItemsSource="{Binding Numbers}" Width="21">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="60">
+                        <TextBlock Padding="5,0" Text="{Binding}" VerticalAlignment="Center" TextAlignment="Center" FontSize="16"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+        <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding Letters}" Height="21">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Grid Width="60">
+                        <TextBlock Text="{Binding}" VerticalAlignment="Center" TextAlignment="Center" FontSize="16"/>
+                    </Grid>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
+        <ItemsControl Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Chessboard}" AlternationCount="64">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <Button Width="60" Height="60" Command="{Binding DataContext.CellCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" >
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="OverridesDefaultStyle" Value="True"/>
+                                <Setter Property="Background" Value="Bisque"/>
+                                <Setter Property="BorderBrush" Value="{x:Null}"/>
+                                <Setter Property="BorderThickness" Value="2"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate>
+                                            <Border Background="{TemplateBinding Background}" >
+                                                <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}">
+                                                    <controls:ChessPiece Piece="{Binding State}" />
+                                                </Border>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource AncestorType=ContentPresenter}, Converter={StaticResource CellColorConverter}}" Value="True">
+                                        <Setter Property="Background" Value="SandyBrown"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Active}" Value="True">
+                                        <Setter Property="BorderBrush" Value="Red"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Columns="8" Rows="8"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+        </ItemsControl>
     </Grid>
     
 </Page>

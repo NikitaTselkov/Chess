@@ -1,51 +1,71 @@
 ﻿using Chess.Desktop.Models;
 using Chess.Desktop.ViewModels.Navigation;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Chess.Desktop.ViewModels.Pages
 {
     public class GameViewModel : NavigateViewModel
     {
-        private string _data;
-        public string Data
+        private Cell[] _chessboard;
+        public Cell[] Chessboard
         {
-            get => _data;
+            get => _chessboard;
             set
             {
-                _data = value;
-                RaisePropertyChanged(nameof(Data));
+                _chessboard = value;
+                RaisePropertyChanged(nameof(Chessboard));
             }
         }
 
-       // public RelayCommand GetDataFromServer { get; set; }
+        private IEnumerable<ChessPiece> _chessPieces;
+        public IEnumerable<ChessPiece> ChessPieces
+        {
+            get => _chessPieces;
+            set
+            {
+                _chessPieces = value;
+                RaisePropertyChanged(nameof(ChessPieces));
+            }
+        }
+
+        public IEnumerable<char> Numbers => "87654321";
+        public IEnumerable<char> Letters => "ABCDEFGH";
+
         public GameViewModel()
         {
-            GetDataFromServer("Chessboard");
-            //GetDataFromServer();
+            Chessboard = GetChessboardFromServer();
+            ChessPieces = GetChessPiecesPositionsFromServer();
         }
 
-        public async void GetDataFromServer(string request = "")
+        public IEnumerable<ChessPiece> GetChessPiecesPositionsFromServer()
         {
-            using (HttpClient client = new HttpClient())
+            var data = Server.GetDataFromServer("Positions");
+            return JsonConvert.DeserializeObject<IEnumerable<ChessPiece>>(data.Result);
+        }
+
+        public Cell[] GetChessboardFromServer()
+        {
+            var data = Server.GetDataFromServer("Chessboard");
+            var array = JsonConvert.DeserializeObject<Cell[][]>(data.Result);
+            var result = new Cell[64];
+
+            var k = 0;
+
+            for (int i = 0; i < 8; i++)
             {
-                var respones = await client.GetAsync($"https://localhost:44352/api/Values/{request}");
-
-                try
+                for (int j = 0; j < 8; j++)
                 {
-                    respones.EnsureSuccessStatusCode();
-
-                    Data = await respones.Content.ReadAsStringAsync();
-                }
-                catch (Exception)
-                {
-                    Data = $"Server error code: {respones.StatusCode}";
+                    result[k] = array[i][j];
+                    k++;
                 }
             }
+
+            return result;
         }
     }
 }
