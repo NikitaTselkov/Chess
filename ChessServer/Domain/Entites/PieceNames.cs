@@ -7,11 +7,11 @@ namespace ChessServer.Domain.Entites
 {
     public enum PieceNames
     {
-        Bishop,
         King,
-        Knight,
-        Pawn,
         Queen,
-        Rook
+        Rook,
+        Knight,
+        Bishop,
+        Pawn
     }
 }

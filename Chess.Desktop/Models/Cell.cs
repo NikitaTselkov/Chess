@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Chess.Desktop.ViewModels.Navigation;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Chess.Desktop.Models
 {
-    public struct Cell
+    public class Cell : NavigateViewModel
     {
         /// <summary>
         /// Номер клетки.
@@ -26,5 +27,27 @@ namespace Chess.Desktop.Models
         /// </summary>
         [JsonProperty("Row")]
         public int Row { get; private set; }
+
+        private State _state;
+        public State State
+        {
+            get => _state;
+            set
+            {
+                _state = value;
+                RaisePropertyChanged(nameof(State));
+            }
+        }
+
+        private bool _isActive;
+        public bool IsActive 
+        {
+            get => _isActive;
+            set
+            {
+                _isActive = value;
+                RaisePropertyChanged(nameof(IsActive));
+            }
+        }
     }
 }

@@ -30,20 +30,21 @@ namespace ChessServer.Controllers
 
         // GET: api/Values/Chessboard
         [HttpGet("Chessboard")]
-        public IActionResult GetChessboard()
+        public IEnumerable<Cell> GetChessboard()
         {
-            var array = new Cell[8][];
+            var array = new Cell[64];
+            var k = 0;
 
             for (int i = 0; i < 8; i++)
             {
-                array[i] = new Cell[8];
                 for (int j = 0; j < 8; j++)
                 {
-                    array[i][j] = _game.Chessboard.Cells[i, j];
+                    array[k] = _game.Chessboard.Cells[i, j];
+                    k++;
                 }
             }
 
-            return Ok(array);
+            return array;
         }
 
         // GET api/Values/5

@@ -54,7 +54,7 @@
         <ItemsControl Grid.Row="2" Grid.Column="1" ItemsSource="{Binding Chessboard}" AlternationCount="64">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Button Width="60" Height="60" Command="{Binding DataContext.CellCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" >
+                    <Button Width="60" Height="60" Command="{Binding DataContext.ClickCellCommand, RelativeSource={RelativeSource AncestorType=Page}}" CommandParameter="{Binding}" >
                         <Button.Style>
                             <Style TargetType="{x:Type Button}">
                                 <Setter Property="OverridesDefaultStyle" Value="True"/>
@@ -76,7 +76,7 @@
                                     <DataTrigger Binding="{Binding (ItemsControl.AlternationIndex), RelativeSource={RelativeSource AncestorType=ContentPresenter}, Converter={StaticResource CellColorConverter}}" Value="True">
                                         <Setter Property="Background" Value="SandyBrown"/>
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding Active}" Value="True">
+                                    <DataTrigger Binding="{Binding IsActive}" Value="True">
                                         <Setter Property="BorderBrush" Value="Red"/>
                                     </DataTrigger>
                                 </Style.Triggers>

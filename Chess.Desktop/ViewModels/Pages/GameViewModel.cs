@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -36,10 +37,16 @@ namespace Chess.Desktop.ViewModels.Pages
         public IEnumerable<char> Numbers => "87654321";
         public IEnumerable<char> Letters => "ABCDEFGH";
 
+        public RelayCommand ClickCellCommand { get; set; }
+
         public GameViewModel()
         {
             Chessboard = GetChessboardFromServer();
             ChessPieces = GetChessPiecesPositionsFromServer();
+
+            ClickCellCommand = new RelayCommand(ClickMethod);
+
+            UpdateChessboard();
         }
 
         public IEnumerable<ChessPiece> GetChessPiecesPositionsFromServer()
@@ -51,21 +58,45 @@ namespace Chess.Desktop.ViewModels.Pages
         public Cell[] GetChessboardFromServer()
         {
             var data = Server.GetDataFromServer("Chessboard");
-            var array = JsonConvert.DeserializeObject<Cell[][]>(data.Result);
-            var result = new Cell[64];
+            return JsonConvert.DeserializeObject<Cell[]>(data.Result);
+        }
 
-            var k = 0;
-
-            for (int i = 0; i < 8; i++)
+        private void ClickMethod(object parameter)
+        {
+            Cell cell = (Cell)parameter;
+            Cell activeCell = Chessboard.FirstOrDefault(x => x.IsActive);
+            if (cell.State != State.Empty)
             {
-                for (int j = 0; j < 8; j++)
-                {
-                    result[k] = array[i][j];
-                    k++;
-                }
+                if (!cell.IsActive && activeCell != null)
+                    activeCell.IsActive = false;
+                cell.IsActive = !cell.IsActive;
+            }
+            else if (activeCell != null)
+            {
+                activeCell.IsActive = false;
+                cell.State = activeCell.State;
+                activeCell.State = State.Empty;
+            }
+        }
+
+        private void UpdateChessboard()
+        {
+            foreach (var item in ChessPieces)
+            {
+                Chessboard.FirstOrDefault(f => f.Title == item.CurrentPosition.Title).State = ConvertToState(item.NameCode, item.Color);
+            }
+        }
+
+        private static State ConvertToState(int nameCode, Colors color)
+        {
+            int result = nameCode + 1;
+
+            if (result != 0 && color == Colors.Black)
+            {
+                result += 6;
             }
 
-            return result;
+            return (State)result;
         }
     }
 }
