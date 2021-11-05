@@ -5,15 +5,14 @@ using ChessServer.Domain.Entites.ChessboardModels;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ChessServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class GameController : ControllerBase
     {
-        private Game _game = new Game();
-
         // GET: api/Values
         [HttpGet]
         public IEnumerable<string> Get()
@@ -25,7 +24,7 @@ namespace ChessServer.Controllers
         [HttpGet("Positions")]
         public IEnumerable<AbstractChessPiece> GetPositions()
         {
-            return _game.Chessboard.ChessPieces;
+            return Game.Chessboard.ChessPieces;
         }
 
         // GET: api/Values/Chessboard
@@ -39,7 +38,7 @@ namespace ChessServer.Controllers
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    array[k] = _game.Chessboard.Cells[i, j];
+                    array[k] = Game.Chessboard.Cells[i, j];
                     k++;
                 }
             }
@@ -58,12 +57,18 @@ namespace ChessServer.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
+            
         }
 
-        // PUT api/Values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        // PUT api/Values/SendMove/{oldPositionTitle}/{newPositionTitle}
+        [HttpPut("SendMove/{oldPositionTitle}/{newPositionTitle}")]
+        public void Put(string oldPositionTitle, string newPositionTitle)
         {
+            var currentCell = Game.Chessboard.Cells[oldPositionTitle];
+            var newCell = Game.Chessboard.Cells[newPositionTitle];
+            var chessPiese = Game.Chessboard.ChessPieces.FirstOrDefault(f => f.CurrentPosition == currentCell);
+
+            Game.MoveWithCheckGameRules(chessPiese, newCell);
         }
 
         // DELETE api/Values/5

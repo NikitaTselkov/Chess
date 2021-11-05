@@ -51,31 +51,41 @@ namespace Chess.Desktop.ViewModels.Pages
 
         public IEnumerable<ChessPiece> GetChessPiecesPositionsFromServer()
         {
-            var data = Server.GetDataFromServer("Positions");
+            var data = Server.GetDataFromServerAsync("Positions");
             return JsonConvert.DeserializeObject<IEnumerable<ChessPiece>>(data.Result);
         }
 
         public Cell[] GetChessboardFromServer()
         {
-            var data = Server.GetDataFromServer("Chessboard");
+            var data = Server.GetDataFromServerAsync("Chessboard");
             return JsonConvert.DeserializeObject<Cell[]>(data.Result);
         }
 
-        private void ClickMethod(object parameter)
+        public void SendMoveToServer(string oldPositionTitle, string newPositionTitle)
         {
-            Cell cell = (Cell)parameter;
+            Server.SetDataToServerAsync($"SendMove/{oldPositionTitle}/{newPositionTitle}");
+        }
+
+        private void ClickMethod(object param)
+        {
+            Cell cell = (Cell)param;
             Cell activeCell = Chessboard.FirstOrDefault(x => x.IsActive);
+            var taskFactory = new TaskFactory();
+
             if (cell.State != State.Empty)
             {
-                if (!cell.IsActive && activeCell != null)
+                if (activeCell != null && !cell.IsActive)
                     activeCell.IsActive = false;
                 cell.IsActive = !cell.IsActive;
             }
             else if (activeCell != null)
             {
                 activeCell.IsActive = false;
-                cell.State = activeCell.State;
                 activeCell.State = State.Empty;
+
+                SendMoveToServer(activeCell.Title, cell.Title);
+                taskFactory.StartNew(() => ChessPieces = GetChessPiecesPositionsFromServer()).GetAwaiter().GetResult();
+                UpdateChessboard();
             }
         }
 
@@ -97,6 +107,20 @@ namespace Chess.Desktop.ViewModels.Pages
             }
 
             return (State)result;
+        }
+
+        private static (int nameCode, Colors color) ConvertFromState(State state)
+        {
+            int nameCode = (int)state - 1;
+            Colors color = Colors.White;
+
+            if (nameCode > 6)
+            {
+                color = Colors.Black;
+                nameCode -= 6;
+            }
+
+            return (nameCode, color);
         }
     }
 }

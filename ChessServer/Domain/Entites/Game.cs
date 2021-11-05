@@ -7,10 +7,10 @@ using System.Linq;
 
 namespace ChessServer.Domain.Entites
 {
-    public sealed class Game
+    public static class Game
     {
-        public Chessboard Chessboard { get; private set; }
-        public AbstractChessPiece CheckPiece
+        public static Chessboard Chessboard { get; private set; }
+        public static AbstractChessPiece CheckPiece
         {
             get 
             {
@@ -18,29 +18,22 @@ namespace ChessServer.Domain.Entites
                 return Chessboard.ChessPieces.FirstOrDefault(f => f.PossiblePositions.Contains(whiteKing.CurrentPosition));
             }
         }
-        public int ImpossibleMoves { get; private set; }
+        public static int ImpossibleMoves { get; private set; }
 
-        private List<(Cell, Colors)> _positionsList;
+        private static List<(Cell, Colors)> _positionsList;
 
-        public Game()
+        static Game()
         {
             Chessboard = new Chessboard();
 
             UpdatePositions();
             SubscribingToEvents();
-
-           // MoveWithCheckGameRules(Chessboard.ChessPieces[6], new Cell(7, 8));
-        }
-
-        ~Game()
-        {
-            UnsubscribingFromEvents();
         }
 
         /// <summary>
         /// Передвижение с проверкой соблюдения правил.
         /// </summary>
-        private void MoveWithCheckGameRules(AbstractChessPiece chessPiece, Cell newPosition)
+        public static void MoveWithCheckGameRules(AbstractChessPiece chessPiece, Cell newPosition)
         {
             var lastPosition = chessPiece.CurrentPosition;
             chessPiece.Move(newPosition);
@@ -79,7 +72,7 @@ namespace ChessServer.Domain.Entites
         /// <summary>
         /// Подписка на события.
         /// </summary>
-        private void SubscribingToEvents()
+        private static void SubscribingToEvents()
         {
             Chessboard.ChessPieces.ForEach(f => f.IsMove += UpdatePositions);
         }
@@ -87,7 +80,7 @@ namespace ChessServer.Domain.Entites
         /// <summary>
         /// Отписка от событий.
         /// </summary>
-        private void UnsubscribingFromEvents()
+        private static void UnsubscribingFromEvents()
         {
             Chessboard.ChessPieces.ForEach(f => f.IsMove -= UpdatePositions);
         }
@@ -95,7 +88,7 @@ namespace ChessServer.Domain.Entites
         /// <summary>
         /// Обновление позиций.
         /// </summary>
-        private void UpdatePositions()
+        private static void UpdatePositions()
         {
             _positionsList = new List<(Cell, Colors)>();
 
@@ -106,7 +99,7 @@ namespace ChessServer.Domain.Entites
             IsKingCanCastle(Colors.Black);
         }
 
-        private void ReplacePawnWithPiece(Pawn pawn, AbstractChessPiece piece)
+        private static void ReplacePawnWithPiece(Pawn pawn, AbstractChessPiece piece)
         {
             var positionsList = new List<(Cell, Colors)> { (pawn.CurrentPosition, pawn.Color) };
 
@@ -121,7 +114,7 @@ namespace ChessServer.Domain.Entites
         /// Проверяет может ли король сделать рокировку.
         /// </summary>
         /// <param name="color"> Цвет короля. </param>
-        private void IsKingCanCastle(Colors color)
+        private static void IsKingCanCastle(Colors color)
         {
             King king = (King)Chessboard[PieceNames.King, color].First();
 

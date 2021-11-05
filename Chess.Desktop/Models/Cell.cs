@@ -49,5 +49,10 @@ namespace Chess.Desktop.Models
                 RaisePropertyChanged(nameof(IsActive));
             }
         }
+
+        public Cell(string title)
+        {
+            Title = title;
+        }
     }
 }
