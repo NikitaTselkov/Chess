@@ -14,16 +14,27 @@ namespace ChessServer.Domain.Entites
         {
             get 
             {
-                var whiteKing = Chessboard[PieceNames.King, Colors.White].First();
-                return Chessboard.ChessPieces.FirstOrDefault(f => f.PossiblePositions.Contains(whiteKing.CurrentPosition));
+                var whiteKing = Chessboard[PieceNames.King, Colors.White].Single();
+                var blackKing = Chessboard[PieceNames.King, Colors.Black].Single();
+
+                return Chessboard.ChessPieces.FirstOrDefault(f =>
+                f.PossiblePositions.Contains(whiteKing.CurrentPosition) ||
+                f.PossiblePositions.Contains(blackKing.CurrentPosition));
             }
         }
-        public static int ImpossibleMoves { get; private set; }
+        public static Dictionary<Colors, int> ImpossibleMoves { get; private set; }
+        public static Colors CurrentMove { get; private set; }
 
         private static List<(Cell, Colors)> _positionsList;
 
         static Game()
         {
+            ImpossibleMoves = new Dictionary<Colors, int>
+            {
+                { Colors.White, 0 },
+                { Colors.Black, 0 }
+            };
+
             Chessboard = new Chessboard();
 
             UpdatePositions();
@@ -35,38 +46,104 @@ namespace ChessServer.Domain.Entites
         /// </summary>
         public static void MoveWithCheckGameRules(AbstractChessPiece chessPiece, Cell newPosition)
         {
-            var lastPosition = chessPiece.CurrentPosition;
-            chessPiece.Move(newPosition);
+            if (CurrentMove == chessPiece.Color)
+            {
+                var lastPosition = chessPiece.CurrentPosition;
+                chessPiece.Move(newPosition);
 
-            if (CheckPiece != null)
-            {
-                ImpossibleMoves++;
-                chessPiece.MoveBackwards(lastPosition);
-                UpdatePositions();
-            }
-            else if (chessPiece is King king)
-            {
-                king.IsMoved = true;
-            }
-            else if (chessPiece is Rook rook)
-            {
-                rook.IsMoved = true;
-            }
-            else if (chessPiece is Pawn pawn)
-            {
-                if (pawn.CurrentPosition.Row == 8 && pawn.Color == Colors.White)
+                if (CheckPiece != null && chessPiece.Color != CheckPiece.Color)
                 {
-                    //TODO: Добавить выбор фигуры.
-                    var piece = new Queen(pawn.Color, pawn.CurrentPosition);
-                    ReplacePawnWithPiece(pawn, piece);
+                    ImpossibleMoves[chessPiece.Color]++;
+                    chessPiece.MoveBackwards(lastPosition);
+                    UpdatePositions();
                 }
-                else if (pawn.CurrentPosition.Row == 1 && pawn.Color == Colors.Black)
+                else
                 {
-                    //TODO: Добавить выбор фигуры.
-                    var piece = new Queen(pawn.Color, pawn.CurrentPosition);
-                    ReplacePawnWithPiece(pawn, piece);
+                    if (chessPiece is King king)
+                    {
+                        if (king.IsMoved == false)
+                        {
+                            // Делает рокировку.
+                            if (king.CurrentPosition.Column == 3)
+                            {
+                                AbstractChessPiece rook = Chessboard[PieceNames.Rook, king.Color].FirstOrDefault(w => w.CurrentPosition.Column == 1);
+                                AbstractChessPiece newRook = null;
+
+                                if (king.Color == Colors.White)
+                                {
+                                    newRook = new Rook(Colors.White, Chessboard.Cells["D1"]);
+                                }
+                                else
+                                {
+                                    newRook = new Rook(Colors.Black, Chessboard.Cells["D8"]);
+                                }
+
+                                newRook.IsMove += UpdatePositions;
+                                RemoveChessPiece(rook);
+                                Chessboard.ChessPieces.Add(newRook);
+                            }
+                            else if (king.CurrentPosition.Column == 7)
+                            {
+                                AbstractChessPiece rook = Chessboard[PieceNames.Rook, king.Color].FirstOrDefault(w => w.CurrentPosition.Column == 8);
+                                AbstractChessPiece newRook = null;
+
+                                if (king.Color == Colors.White)
+                                {
+                                    newRook = new Rook(Colors.White, Chessboard.Cells["F1"]);
+                                }
+                                else
+                                {
+                                    newRook = new Rook(Colors.Black, Chessboard.Cells["F8"]);
+                                }
+
+                                newRook.IsMove += UpdatePositions;
+                                RemoveChessPiece(rook);
+                                Chessboard.ChessPieces.Add(newRook);
+                            }
+                        }
+
+                        king.IsMoved = true;
+                    }
+                    else if (chessPiece is Rook rook)
+                    {
+                        rook.IsMoved = true;
+                    }
+                    else if (chessPiece is Pawn pawn)
+                    {
+                        if (pawn.CurrentPosition.Row == 8 && pawn.Color == Colors.White)
+                        {
+                            //TODO: Добавить выбор фигуры.
+                            var piece = new Queen(pawn.Color, pawn.CurrentPosition);
+                            ReplacePawnWithPiece(pawn, piece);
+                        }
+                        else if (pawn.CurrentPosition.Row == 1 && pawn.Color == Colors.Black)
+                        {
+                            //TODO: Добавить выбор фигуры.
+                            var piece = new Queen(pawn.Color, pawn.CurrentPosition);
+                            ReplacePawnWithPiece(pawn, piece);
+                        }
+                    }
+
+                    var felledChessPiece = Chessboard.ChessPieces.FirstOrDefault(f => f.CurrentPosition == newPosition && f.Color != chessPiece.Color);
+
+                    if (felledChessPiece != null)
+                    {
+                        RemoveChessPiece(felledChessPiece);
+                    }
+
+                    CurrentMove = CurrentMove == Colors.White ? Colors.Black : Colors.White;
                 }
             }
+        }
+
+        /// <summary>
+        /// Удаляет фигуру.
+        /// </summary>
+        private static void RemoveChessPiece(AbstractChessPiece felledChessPiece)
+        {
+            felledChessPiece.IsMove -= UpdatePositions;
+            Chessboard.ChessPieces.Remove(felledChessPiece);           
+            UpdatePositions();
         }
 
         /// <summary>
@@ -99,6 +176,9 @@ namespace ChessServer.Domain.Entites
             IsKingCanCastle(Colors.Black);
         }
 
+        /// <summary>
+        /// Замена пешки на другую фигуру.
+        /// </summary>
         private static void ReplacePawnWithPiece(Pawn pawn, AbstractChessPiece piece)
         {
             var positionsList = new List<(Cell, Colors)> { (pawn.CurrentPosition, pawn.Color) };

@@ -61,6 +61,7 @@ namespace ChessServer.Controllers
         }
 
         // PUT api/Values/SendMove/{oldPositionTitle}/{newPositionTitle}
+        [Route("SendMove/{oldPositionTitle}/{newPositionTitle}")]
         [HttpPut("SendMove/{oldPositionTitle}/{newPositionTitle}")]
         public void Put(string oldPositionTitle, string newPositionTitle)
         {

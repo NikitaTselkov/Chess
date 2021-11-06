@@ -1,12 +1,8 @@
 ﻿using Chess.Desktop.Models;
 using Chess.Desktop.ViewModels.Navigation;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace Chess.Desktop.ViewModels.Pages
 {
@@ -53,7 +49,6 @@ namespace Chess.Desktop.ViewModels.Pages
         {
             Cell cell = (Cell)param;
             Cell activeCell = Chessboard.FirstOrDefault(x => x.IsActive);
-            var taskFactory = new TaskFactory();
 
             if (cell.State != State.Empty)
             {
@@ -74,9 +69,15 @@ namespace Chess.Desktop.ViewModels.Pages
 
         private void UpdateChessboard()
         {
+            // Обнуляем состояние клеток, где должны стоять ладьи для корректной работы рокировок.
+            Chessboard[0].State = State.Empty;
+            Chessboard[8].State = State.Empty;
+            Chessboard[56].State = State.Empty;
+            Chessboard[63].State = State.Empty;
+
             foreach (var item in ChessPieces)
             {
-                Chessboard.FirstOrDefault(f => f.Title == item.CurrentPosition.Title).State = ConvertToState(item.NameCode, item.Color);
+                Chessboard.Single(s => s.Title == item.CurrentPosition.Title).State = ConvertToState(item.NameCode, item.Color);
             }
         }
 

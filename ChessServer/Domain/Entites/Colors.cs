@@ -7,7 +7,7 @@ namespace ChessServer.Domain.Entites
 {
     public enum Colors
     {
-        White,
-        Black
+        Black,
+        White  
     }
 }
