@@ -34,36 +34,19 @@ namespace Chess.Desktop.ViewModels.Pages
             }
         }
 
-        public IEnumerable<char> Numbers => "87654321";
+        public IEnumerable<char> Numbers => "12345678";
         public IEnumerable<char> Letters => "ABCDEFGH";
 
         public RelayCommand ClickCellCommand { get; set; }
 
         public GameViewModel()
         {
-            Chessboard = GetChessboardFromServer();
-            ChessPieces = GetChessPiecesPositionsFromServer();
+            Chessboard = Server.GetChessboard();
+            ChessPieces = Server.GetChessPiecesPositions();
 
             ClickCellCommand = new RelayCommand(ClickMethod);
 
             UpdateChessboard();
-        }
-
-        public IEnumerable<ChessPiece> GetChessPiecesPositionsFromServer()
-        {
-            var data = Server.GetDataFromServerAsync("Positions");
-            return JsonConvert.DeserializeObject<IEnumerable<ChessPiece>>(data.Result);
-        }
-
-        public Cell[] GetChessboardFromServer()
-        {
-            var data = Server.GetDataFromServerAsync("Chessboard");
-            return JsonConvert.DeserializeObject<Cell[]>(data.Result);
-        }
-
-        public void SendMoveToServer(string oldPositionTitle, string newPositionTitle)
-        {
-            Server.SetDataToServerAsync($"SendMove/{oldPositionTitle}/{newPositionTitle}");
         }
 
         private void ClickMethod(object param)
@@ -83,9 +66,9 @@ namespace Chess.Desktop.ViewModels.Pages
                 activeCell.IsActive = false;
                 activeCell.State = State.Empty;
 
-                SendMoveToServer(activeCell.Title, cell.Title);
-                taskFactory.StartNew(() => ChessPieces = GetChessPiecesPositionsFromServer()).GetAwaiter().GetResult();
-                UpdateChessboard();
+                Server.SendMove(activeCell.Title, cell.Title);            
+                ChessPieces = Server.GetChessPiecesPositions();
+                UpdateChessboard(); 
             }
         }
 
