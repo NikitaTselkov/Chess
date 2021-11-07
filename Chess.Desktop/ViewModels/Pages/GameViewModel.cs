@@ -50,21 +50,22 @@ namespace Chess.Desktop.ViewModels.Pages
             Cell cell = (Cell)param;
             Cell activeCell = Chessboard.FirstOrDefault(x => x.IsActive);
 
-            if (cell.State != State.Empty)
+            if (activeCell != null)
+            {
+                activeCell.IsActive = false;
+                activeCell.State = State.Empty;
+
+                Server.SendMove(activeCell.Title, cell.Title);
+                ChessPieces = Server.GetChessPiecesPositions();
+                UpdateChessboard();
+            }
+            else if (cell.State != State.Empty)
             {
                 if (activeCell != null && !cell.IsActive)
                     activeCell.IsActive = false;
                 cell.IsActive = !cell.IsActive;
             }
-            else if (activeCell != null)
-            {
-                activeCell.IsActive = false;
-                activeCell.State = State.Empty;
-
-                Server.SendMove(activeCell.Title, cell.Title);            
-                ChessPieces = Server.GetChessPiecesPositions();
-                UpdateChessboard(); 
-            }
+            
         }
 
         private void UpdateChessboard()
