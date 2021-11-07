@@ -13,13 +13,6 @@ namespace ChessServer.Controllers
     [ApiController]
     public class GameController : ControllerBase
     {
-        // GET: api/Values
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new List<string>();
-        }
-
         // GET: api/Values/Positions
         [HttpGet("Positions")]
         public IEnumerable<AbstractChessPiece> GetPositions()
@@ -34,7 +27,7 @@ namespace ChessServer.Controllers
             var array = new Cell[64];
             var k = 0;
 
-            for (int i = 0; i < 8; i++)
+            for (int i = 7; i >= 0; i--)
             {
                 for (int j = 0; j < 8; j++)
                 {
@@ -46,22 +39,7 @@ namespace ChessServer.Controllers
             return array;
         }
 
-        // GET api/Values/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/Values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-            
-        }
-
         // PUT api/Values/SendMove/{oldPositionTitle}/{newPositionTitle}
-        [Route("SendMove/{oldPositionTitle}/{newPositionTitle}")]
         [HttpPut("SendMove/{oldPositionTitle}/{newPositionTitle}")]
         public void Put(string oldPositionTitle, string newPositionTitle)
         {
@@ -70,12 +48,6 @@ namespace ChessServer.Controllers
             var chessPiese = Game.Chessboard.ChessPieces.FirstOrDefault(f => f.CurrentPosition == currentCell);
 
             Game.MoveWithCheckGameRules(chessPiese, newCell);
-        }
-
-        // DELETE api/Values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

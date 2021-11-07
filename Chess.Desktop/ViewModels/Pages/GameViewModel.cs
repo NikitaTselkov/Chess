@@ -30,7 +30,7 @@ namespace Chess.Desktop.ViewModels.Pages
             }
         }
 
-        public IEnumerable<char> Numbers => "12345678";
+        public IEnumerable<char> Numbers => "87654321";
         public IEnumerable<char> Letters => "ABCDEFGH";
 
         public RelayCommand ClickCellCommand { get; set; }
